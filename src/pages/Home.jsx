@@ -109,10 +109,6 @@ function Home() {
     }
   };
 
-  const resetVisit = () => {
-    localStorage.removeItem('hasVisitedLoversZone');
-    window.location.reload();
-  };
 
   return (
     <div className='w-full bg-black h-[100dvh] relative overflow-hidden font-sans'>
@@ -165,7 +161,6 @@ function Home() {
         <div className='py-6 max-w-4xl mx-auto text-white px-6 md:px-14'>
           <div className='flex justify-between items-center mb-8 border-b border-gray-800 pb-4'>
             <h1 className='text-2xl font-bold'>Main Feed</h1>
-            <button onClick={resetVisit} className='text-xs text-red-500 hover:text-red-400 cursor-pointer'>Reset (Test Again)</button>
           </div>
 
           <div className='space-y-4 pb-20'>
