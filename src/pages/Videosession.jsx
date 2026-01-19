@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 function Videosession() {
   return (
-    <div className='bg-black h-screen w-full flex flex-col items-center justify-center text-center p-6'>
+    <div className='bg-black h-[100dvh] w-full flex flex-col items-center justify-center text-center p-6'>
       
       {/* Icon */}
       <div className='w-20 h-20 bg-gray-900 rounded-full flex items-center justify-center mb-6 animate-pulse'>
