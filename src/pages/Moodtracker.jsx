@@ -133,7 +133,7 @@ function Moodtracker() {
   };
 
   return (
-    <div className="w-full h-screen bg-[#0b141a] flex flex-col relative">
+    <div className="w-full bg-[#0b141a] flex flex-col relative">
       <div className="bg-[#202c33] p-4 flex items-center gap-3 text-white z-10 shadow-md">
         <button onClick={() => navigate(-1)} className="md:hidden text-gray-400 hover:text-white mr-2 cursor-pointer">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" /></svg>

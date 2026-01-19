@@ -115,7 +115,7 @@ function Home() {
   };
 
   return (
-    <div className='w-full h-screen bg-black relative overflow-hidden font-sans'>
+    <div className='w-full bg-black relative overflow-hidden font-sans'>
       
       {/* 1. WELCOME SECTION */}
       <div className={`absolute inset-0 z-30 flex items-center justify-center bg-black transition-opacity duration-500 ease-in-out ${showWelcome ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>

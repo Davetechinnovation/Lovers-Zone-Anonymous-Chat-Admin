@@ -141,7 +141,7 @@ function Adminpanel() {
   };
 
   return (
-    <div className='flex h-screen bg-[#0b141a] overflow-hidden'>
+    <div className='flex bg-[#0b141a] overflow-hidden'>
       
       {/* --- SIDEBAR --- */}
       <div className={`
