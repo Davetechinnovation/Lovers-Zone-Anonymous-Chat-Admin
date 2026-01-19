@@ -78,8 +78,8 @@ function Sidebar() {
               location.pathname === "/mood-tracker" ? "bg-gray-800 text-cyan-400 font-bold border-l-4 border-cyan-400" : "text-gray-400 hover:bg-gray-900 hover:text-white"
             }`}
           >
-            <span>📊</span>
-            <span>Mood Tracker</span>
+            <span>🔒 </span>
+            <span>Anonymous Support</span>
           </Link>
           
           <Link 
