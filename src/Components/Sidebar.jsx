@@ -46,7 +46,7 @@ function Sidebar() {
          - Desktop (md): relative position, always visible (translate-x-0), takes up space
       */}
       <div className={`
-        fixed inset-y-0 left-0 z-50 sm:w-[300px] w-[250px] h-screen bg-black border-r border-gray-800 p-5 
+        fixed inset-y-0 left-0 z-50 sm:w-[300px] w-[260px] h-screen bg-black border-r border-gray-800 p-5 
         transform transition-transform duration-300 ease-in-out
         ${isOpen ? "translate-x-0" : "-translate-x-full"}
         md:translate-x-0 md:static md:block shrink-0
