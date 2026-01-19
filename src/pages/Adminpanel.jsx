@@ -17,6 +17,8 @@ function Adminpanel() {
   const [isRecording, setIsRecording] = useState(false);
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
+  // Track MimeType
+  const mimeTypeRef = useRef("audio/webm");
 
   const dummy = useRef();
 
@@ -32,7 +34,7 @@ function Adminpanel() {
     const q = query(collection(db, "chats"), orderBy("lastUpdated", "desc"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       setChats(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-      setIsLoadingChats(false); // Stop loading when data arrives
+      setIsLoadingChats(false); 
     });
     return () => unsubscribe();
   }, []);
@@ -41,25 +43,40 @@ function Adminpanel() {
   useEffect(() => {
     if (!selectedChatId) return;
     
-    setIsLoadingMessages(true); // Start loading when clicking a user
+    setIsLoadingMessages(true); 
     const q = query(
       collection(db, "chats", selectedChatId, "messages"), 
       orderBy("createdAt", "asc")
     );
     const unsubscribe = onSnapshot(q, (snapshot) => {
       setMessages(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-      setIsLoadingMessages(false); // Stop loading
+      setIsLoadingMessages(false); 
       setTimeout(() => dummy.current?.scrollIntoView({ behavior: 'smooth' }), 100);
     });
 
     return () => unsubscribe();
   }, [selectedChatId]);
 
-  // --- AUDIO LOGIC ---
+  // --- RECORDING LOGIC (FIXED FOR IOS) ---
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      mediaRecorderRef.current = new MediaRecorder(stream);
+      
+      // 1. DETECT SUPPORTED MIME TYPE
+      let mimeType = "audio/webm";
+      if (MediaRecorder.isTypeSupported("audio/webm")) {
+        mimeType = "audio/webm";
+      } else if (MediaRecorder.isTypeSupported("audio/mp4")) {
+        mimeType = "audio/mp4"; // iOS Safari usually wants this
+      } else if (MediaRecorder.isTypeSupported("audio/ogg")) {
+        mimeType = "audio/ogg";
+      }
+      
+      mimeTypeRef.current = mimeType;
+
+      // 2. CREATE RECORDER
+      const options = { mimeType: mimeType };
+      mediaRecorderRef.current = new MediaRecorder(stream, options);
       audioChunksRef.current = [];
 
       mediaRecorderRef.current.ondataavailable = (event) => {
@@ -69,14 +86,15 @@ function Adminpanel() {
       };
 
       mediaRecorderRef.current.onstop = async () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
-        // Convert Blob to Base64 to save in Firestore
+        // 3. CREATE BLOB WITH DETECTED TYPE
+        const audioBlob = new Blob(audioChunksRef.current, { type: mimeTypeRef.current });
         const reader = new FileReader();
         reader.readAsDataURL(audioBlob);
         reader.onloadend = async () => {
            const base64Audio = reader.result;
            await sendAudioMessage(base64Audio);
         };
+        stream.getTracks().forEach(track => track.stop());
       };
 
       mediaRecorderRef.current.start();
@@ -88,7 +106,7 @@ function Adminpanel() {
   };
 
   const stopRecording = () => {
-    if (mediaRecorderRef.current) {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
     }
@@ -98,7 +116,7 @@ function Adminpanel() {
     if (!selectedChatId) return;
     try {
       await addDoc(collection(db, "chats", selectedChatId, "messages"), {
-        audio: base64Audio, // Save audio data
+        audio: base64Audio, 
         type: 'audio',
         sender: 'admin', 
         createdAt: serverTimestamp()
